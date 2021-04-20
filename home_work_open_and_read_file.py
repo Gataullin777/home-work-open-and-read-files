@@ -1,31 +1,8 @@
 from pprint import pprint
-'''
-Задача №1
-Должен получится следующий словарь
 
-cook_book = {
-  'Омлет': [
-    {'ingredient_name': 'Яйцо', 'quantity': 2, 'measure': 'шт.'},
-    {'ingredient_name': 'Молоко', 'quantity': 100, 'measure': 'мл'},
-    {'ingredient_name': 'Помидор', 'quantity': 2, 'measure': 'шт'}
-    ],
-  'Утка по-пекински': [
-    {'ingredient_name': 'Утка', 'quantity': 1, 'measure': 'шт'},
-    {'ingredient_name': 'Вода', 'quantity': 2, 'measure': 'л'},
-    {'ingredient_name': 'Мед', 'quantity': 3, 'measure': 'ст.л'},
-    {'ingredient_name': 'Соевый соус', 'quantity': 60, 'measure': 'мл'}
-    ],
-  'Запеченный картофель': [
-    {'ingredient_name': 'Картофель', 'quantity': 1, 'measure': 'кг'},
-    {'ingredient_name': 'Чеснок', 'quantity': 3, 'measure': 'зубч'},
-    {'ingredient_name': 'Сыр гауда', 'quantity': 100, 'measure': 'г'},
-    ]
-  }
-'''
-
-dish_dict = {}
-#ingredient_list = []
-ingredient_atribute = ['ingredient_name','quantity','measure']
+# task_1
+cook_book = {}
+ingredient_attribute = ['ingredient_name','quantity','measure']
 
 with open( 'file.txt', encoding = 'utf-8') as file:
 
@@ -35,22 +12,51 @@ with open( 'file.txt', encoding = 'utf-8') as file:
 
         ingredient_list = []
 
-
         for i in range(count):
             k = file.readline().strip()  # str
-            s = k.split('|')   # list
-
-            ingredients = dict(zip(ingredient_atribute, s))
+            s = k.split(' | ' )   # list
+            ingredients = dict(zip(ingredient_attribute, s))
             ingredient_list.append(ingredients)
 
         file.readline().strip()
 
-        dish_dict.setdefault(dish,ingredient_list)
+        cook_book.setdefault(dish,ingredient_list)
 
 
 
-print(dish_dict)
+#print(cook_book)
 
 
+# task_2
 
 
+def get_shop_list_by_dishes(dishes, person_count):
+
+    ingredients_for_dishes = {}
+
+    for dish in dishes:
+        attribute_list = ['measure', 'quantity']
+        if dish in cook_book:
+
+            for i in cook_book[dish]:
+                value_list = []
+                value_list.append(i['measure'])
+                multiplication_quantity = int(i['quantity']) * person_count
+                value_list.append(multiplication_quantity)
+
+                result = dict(zip(attribute_list, value_list))
+
+                if i['ingredient_name'] in ingredients_for_dishes:
+                    ingredients_for_dishes[i['ingredient_name']]['quantity'] = int(ingredients_for_dishes[i['ingredient_name']]['quantity']) + int(result['quantity'])        # str
+
+                else:
+                    ingredients_for_dishes[i['ingredient_name']] = result
+
+        else:
+            print(f'{dish} такого блюда нет в меню!!!')
+
+
+    pprint(ingredients_for_dishes)
+
+
+get_shop_list_by_dishes(['Омлет','Утка по-пекински','Запеченный картофель','Фахитос'], 3 )
